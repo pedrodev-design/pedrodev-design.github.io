@@ -1,35 +1,30 @@
-// ===== TEMPORIZADOR =====
-const countdownElement = document.getElementById('countdown');
-const timerKey = "discountTimer";
-const defaultMinutes = 5; // tempo inicial em minutos
+document.addEventListener("DOMContentLoaded", () => {
+    const countdownElement = document.getElementById('countdown');
+    const timerKey = "discountTimer";
+    const defaultMinutes = 5;
 
-// Função para formatar o tempo MM:SS
-function formatTime(seconds) {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-}
-
-// Recupera tempo do localStorage ou inicializa
-let remainingTime = localStorage.getItem(timerKey);
-if (!remainingTime) {
-    remainingTime = defaultMinutes * 60; // converte para segundos
-} else {
-    remainingTime = parseInt(remainingTime);
-}
-
-// Atualiza localStorage a cada segundo
-const timerInterval = setInterval(() => {
-    remainingTime--;
-    if (remainingTime <= 0) {
-        clearInterval(timerInterval);
-        countdownElement.textContent = "00:00";
-        localStorage.removeItem(timerKey);
-        return;
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
     }
+
+    let remainingTime = parseInt(localStorage.getItem(timerKey)) || defaultMinutes * 60;
     countdownElement.textContent = formatTime(remainingTime);
-    localStorage.setItem(timerKey, remainingTime);
-}, 1000);
+
+    const timerInterval = setInterval(() => {
+        remainingTime--;
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            countdownElement.textContent = "00:00";
+            localStorage.removeItem(timerKey);
+            return;
+        }
+        countdownElement.textContent = formatTime(remainingTime);
+        localStorage.setItem(timerKey, remainingTime);
+    }, 1000);
+});
+
 
 // ===== MODAL =====
 const modal = document.getElementById("modal");
